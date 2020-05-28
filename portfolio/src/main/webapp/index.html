@@ -5,14 +5,79 @@
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
+    <style>
+      *{
+          box-sizing: border-box;
+      }
+      header {
+          background-color: #615;
+          padding: 35px;
+          text-align: center;
+          font-size: 40px;
+          color: white;
+      }
+      section {
+          display: -webkit-flex;
+          display: flex;
+      }
+      nav {
+          -webkit-flex: 1;
+          -ms-flex: 1;
+          flex: 1;
+          background: CadetBlue;
+          padding: 20px;
+      }
+      nav ul {
+          list-style-type: none;
+          padding: 0;
+      }
+      article {
+          -webkit-flex: 3;
+          -ms-flex: 3;
+          flex: 3;
+          background-color: Azure;
+      }
+      footer {
+          background-color: DarkCyan;
+          padding: 10px;
+          text-align: center;
+          color: white;
+      }
+      @media (max-width: 700px) {
+          section {
+              -webkit-flex-direction: column;
+              flex-direction: column;
+          }
+      }
+      </style> 
+
   </head>
   <body>
     <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
+      <h2 style="color:SlateBlue;">A snapshot of Sylvia</h1>
+      <img src="images/profile_pic.jpg" alt="Image" height="420" width="420"/>
+      <p>Click here to get a random fun fact about myself:</p>
       <button onclick="addRandomGreeting()">Hello</button>
       <div id="greeting-container"></div>
     </div>
+    <section>
+      <nav>
+          <ul>
+              <li> <a href="#">About Me</a></li>
+              <li> <a href="#">Education</a></li>
+              <li> <a href="#">Clubs</a></li>
+              <li> <a href="#">Computer science and such things</a></li>
+          </ul>
+      </nav>
+      <article>
+          <h1> About Me</h1>
+          <p> I'm Sylvia Zhang(张梓愉). Originally from Northeastern China, I'm now a rising
+              junior studying computer science at Carnegie Mellon University.</p>
+      </article>
+    </section>
+    <footer>
+        <p>TBD</p>
+    </footer>
+
   </body>
 </html>
