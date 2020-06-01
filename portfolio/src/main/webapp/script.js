@@ -17,7 +17,7 @@
  */
 function addRandomGreeting() {
   const greetings =
-      ['I play the bass guitar.', 'My favorite video game is One Shot', 'I run a karate club at school', 'Я говорю по русский.'];
+    ['I play the bass guitar.', 'My favorite video game is One Shot', 'I run a karate club at school', 'Я говорю по русский.'];
 
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -25,4 +25,15 @@ function addRandomGreeting() {
   // Add it to the page.
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
+}
+
+function FloatingNavbar() {
+  var navbar = document.getElementById("navbar");
+  var sticky = navbar.offsetTop;
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky");
+  }
+  else {
+    navbar.classList.remove("sticky");
+  }
 }
