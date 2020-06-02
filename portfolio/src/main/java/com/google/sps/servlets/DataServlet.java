@@ -14,6 +14,8 @@
 
 package com.google.sps.servlets;
 
+import com.google.sps.data.CommentHistory;
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -22,22 +24,35 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/literature")
+/** Servlet that maintains the comment section.*/
+@WebServlet("/comment")
 public final class DataServlet extends HttpServlet {
 
-  private List<String> BookRecs;
+  private CommentHistory comments = new CommentHistory();
+
   @Override
-  public void init() {
-    BookRecs = new ArrayList<>();
-    BookRecs.add("The Thread by Victoria Hislop");
-    BookRecs.add("The Hunchback of Notre Dame by Victor Hugo");
-    BookRecs.add("The Brothers Karamazov by Fyodor Dostoevsky");
-  }
-  @Override
+  /** Load all comment history onload **/
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String book = BookRecs.get((int) (Math.random() * BookRecs.size()));
-    response.setContentType("text/html;");
-    response.getWriter().println(book);
+    response.setContentType("application/json");
+    String json = new Gson().toJson(comments);
+    System.out.println("got json string " + json);
+    response.getWriter().println(json);   
+  }
+
+  @Override
+  /** Add comment submission to the comments object **/
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String text = getParameter(request, "text-input", "");
+    comments.addComment(text);
+    response.sendRedirect("/index.html");
+  }
+
+  /** Safe wrapper for getParameter **/
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
   }
 }

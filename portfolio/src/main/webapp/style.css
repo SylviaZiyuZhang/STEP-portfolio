@@ -17,6 +17,8 @@ body {
   margin-right: auto;
   width: 68%;
 }
+
+/* Navigation bar styling */
 #header {
   background-color: #847f7a;
   padding: 35px;
@@ -62,6 +64,7 @@ body {
   padding-top: 60px;
 }
 
+/* Flexbox overlay styling */
 .flex-container {
   display:flex;
   background-color: #ffffff00;
@@ -95,9 +98,8 @@ body {
     color: #f2f2f2;
     font-size: 40px;
 }
+/* content body styling */
 section {
-  display: -webkit-flex;
-  display: flex;
   justify-content: center;
 }
 article {
@@ -105,6 +107,7 @@ article {
   padding: 20px 30px;
 }
 
+/* image overlay styling */
 .container {
   position: relative;
   margin-left: auto;
@@ -142,12 +145,16 @@ article {
   transform: translate(-50%, -50%);
   text-align: center;
 }
+
+/* footer styling */
 footer {
   background-color: #847f7a;
   padding: 10px;
   text-align: center;
   color: white;
 }
+
+/* hyperlink styling */
 a:link {
   text-decoration: none;
   color: whitesmoke;
@@ -161,6 +168,7 @@ a:hover {
   color: #e1c0d8;
 }
 
+/* responsive design */
 @media (max-width: 700px) {
   section {
     -webkit-flex-direction: column;
