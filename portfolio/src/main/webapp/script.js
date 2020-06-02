@@ -37,3 +37,9 @@ function FloatingNavbar() {
     navbar.classList.remove("sticky");
   }
 }
+
+function getBookRec() {
+  fetch('/literature').then(response => response.text()).then((quote) => {
+    document.getElementById('book-container').innerText = quote;
+  })
+}

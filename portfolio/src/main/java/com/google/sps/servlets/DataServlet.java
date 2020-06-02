@@ -14,6 +14,8 @@
 
 package com.google.sps.servlets;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,12 +23,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+@WebServlet("/literature")
+public final class DataServlet extends HttpServlet {
 
+  private List<String> BookRecs;
+  @Override
+  public void init() {
+    BookRecs = new ArrayList<>();
+    BookRecs.add("The Thread by Victoria Hislop");
+    BookRecs.add("The Hunchback of Notre Dame by Victor Hugo");
+    BookRecs.add("The Brothers Karamazov by Fyodor Dostoevsky");
+  }
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String book = BookRecs.get((int) (Math.random() * BookRecs.size()));
     response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello world!</h1>");
+    response.getWriter().println(book);
   }
 }
