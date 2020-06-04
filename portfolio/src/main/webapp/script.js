@@ -41,13 +41,12 @@ function FloatingNavbar() {
 
 /* Fetches comments from DataServlet and display */
 function getComments() {
-  fetch('/comment').then(response => response.json()).then((commenthistory) => {
+  fetch('/load-comment').then(response => response.json()).then((commenthistory) => {
     const historyEl = document.getElementById('history');
     historyEl.innerHTML = '';
     var i;
-    console.log("building comment element, num comment is");
-    for (i = 0; i < commenthistory.history.length; i++) {
-      historyEl.appendChild(createListElement(commenthistory.history[i]));
+    for (i = 0; i < commenthistory.length; i++) {
+      historyEl.appendChild(createListElement(commenthistory[i]));
     }
   });
 }

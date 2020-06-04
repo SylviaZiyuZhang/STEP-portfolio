@@ -14,53 +14,43 @@
 
 package com.google.sps.servlets;
 
-import com.google.sps.data.CommentHistory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
-
+import com.google.sps.data.CommentHistory;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that maintains the comment section.*/
-@WebServlet("/comment")
-public final class DataServlet extends HttpServlet {
-
-  private CommentHistory comments = new CommentHistory();
+/** Servlet responsible for listing comments. */
+@WebServlet("/load-comment")
+public class LoadCommentServlet extends HttpServlet {
 
   @Override
-  /** Load all comment history onload **/
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("application/json");
-    String json = new Gson().toJson(comments);
-    System.out.println("got json string " + json);
-    response.getWriter().println(json);   
-  }
-
-  @Override
-  /** Add comment submission to the comments object **/
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String text = getParameter(request, "text-input", "");
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("content", text);
+    Query query = new Query("Comment");
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
-    response.sendRedirect("/index.html");
-  }
+    PreparedQuery results = datastore.prepare(query);
 
-  /** Safe wrapper for getParameter **/
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
+    List<String> commentList = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      String content = (String) entity.getProperty("content");
+      commentList.add(content);
     }
-    return value;
+
+    Gson gson = new Gson();
+
+    response.setContentType("application/json;");
+    response.getWriter().println(gson.toJson(commentList));
   }
 }
