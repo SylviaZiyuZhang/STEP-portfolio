@@ -15,7 +15,11 @@
 package com.google.sps.servlets;
 
 import com.google.sps.data.CommentHistory;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -43,6 +47,11 @@ public final class DataServlet extends HttpServlet {
   /** Add comment submission to the comments object **/
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String text = getParameter(request, "text-input", "");
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("content", text);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(commentEntity);
     comments.addComment(text);
     response.sendRedirect("/index.html");
   }
