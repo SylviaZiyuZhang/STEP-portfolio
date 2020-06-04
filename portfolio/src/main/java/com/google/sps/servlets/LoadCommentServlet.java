@@ -19,7 +19,6 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import com.google.sps.data.CommentHistory;
 import java.io.IOException;
@@ -47,6 +46,7 @@ public class LoadCommentServlet extends HttpServlet {
       String content = (String) entity.getProperty("content");
       commentList.add(content);
     }
+    /** Take the first numDisplay/numComments comments to write into response **/
     int numDisplay = getNumDisplay(request);
     int toIndex = Math.min(numDisplay, commentList.size());
     List<String> commentDisplayList = commentList.subList(0, toIndex);
@@ -56,10 +56,7 @@ public class LoadCommentServlet extends HttpServlet {
     response.getWriter().println(gson.toJson(commentDisplayList));
   }
 
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.sendRedirect("/index.html");
-  }
+  /** Safe wrapper for extracting the requested number of comments to display **/
   private int getNumDisplay(HttpServletRequest request) {
     String numString = request.getParameter("numdisplay");
     int num;
@@ -69,7 +66,6 @@ public class LoadCommentServlet extends HttpServlet {
       System.err.println("Not an integer: " + numString);
       return -1;
     }
-
     if (num < 1) {
       System.err.println("Invalid number of display: " + numString);
       return -1;
