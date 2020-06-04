@@ -40,8 +40,9 @@ function FloatingNavbar() {
 }
 
 /* Fetches comments from DataServlet and display */
-function getComments() {
-  fetch('/load-comment').then(response => response.json()).then((commenthistory) => {
+function getComments(numdisplay) {
+  const request = '/load-comment?numdisplay=' + numdisplay;
+  fetch(request).then(response => response.json()).then((commenthistory) => {
     const historyEl = document.getElementById('history');
     historyEl.innerHTML = '';
     var i;

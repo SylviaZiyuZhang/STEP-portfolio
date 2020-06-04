@@ -9,7 +9,7 @@
 
 </head>
 
-<body onload="getComments()">
+<body onload="getComments(10)">
 	<script>
 		window.onscroll = function(){FloatingNavbar()};
 	</script>
@@ -50,8 +50,12 @@
 			<form action="/comment" method="POST">
 				<textarea name="text-input">Leave your comment here</textarea>
 				<br/><br/>
+				<p>Enter the desired number of comments to display:</p>
+				<input type="number" name="num-comments" min="0" max="100" value="10" onchange=getComments(this.value)>
+				<br/>
 				<input type="submit" />
       </form>
+
 				<h1> User Comments </h1>
 				<ul id="history"></ul>
 		</article>

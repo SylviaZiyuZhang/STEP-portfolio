@@ -40,13 +40,14 @@ public final class DataServlet extends HttpServlet {
     response.setContentType("application/json");
     String json = new Gson().toJson(comments);
     System.out.println("got json string " + json);
-    response.getWriter().println(json);   
+    response.getWriter().println(json);
   }
 
   @Override
   /** Add comment submission to the comments object **/
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String text = getParameter(request, "text-input", "");
+    
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("content", text);
 
@@ -63,4 +64,6 @@ public final class DataServlet extends HttpServlet {
     }
     return value;
   }
+
+  
 }

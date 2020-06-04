@@ -47,10 +47,33 @@ public class LoadCommentServlet extends HttpServlet {
       String content = (String) entity.getProperty("content");
       commentList.add(content);
     }
-
+    int numDisplay = getNumDisplay(request);
+    int toIndex = Math.min(numDisplay, commentList.size());
+    List<String> commentDisplayList = commentList.subList(0, toIndex);
     Gson gson = new Gson();
 
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(commentList));
+    response.getWriter().println(gson.toJson(commentDisplayList));
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    response.sendRedirect("/index.html");
+  }
+  private int getNumDisplay(HttpServletRequest request) {
+    String numString = request.getParameter("numdisplay");
+    int num;
+    try {
+      num = Integer.parseInt(numString);
+    } catch (NumberFormatException e) {
+      System.err.println("Not an integer: " + numString);
+      return -1;
+    }
+
+    if (num < 1) {
+      System.err.println("Invalid number of display: " + numString);
+      return -1;
+    }
+    return num;
   }
 }
