@@ -27,6 +27,7 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
+/* Maintains the floating navigation bar */
 function FloatingNavbar() {
   var navbar = document.getElementById("navbar");
   var sticky = navbar.offsetTop;
@@ -38,8 +39,35 @@ function FloatingNavbar() {
   }
 }
 
-function getBookRec() {
-  fetch('/literature').then(response => response.text()).then((quote) => {
-    document.getElementById('book-container').innerText = quote;
-  })
+/* Fetches comments from DataServlet and display */
+function getComments() {
+  fetch('/comment').then(response => response.json()).then((commenthistory) => {
+    const historyEl = document.getElementById('history');
+    historyEl.innerHTML = '';
+    var i;
+    console.log("building comment element, num comment is");
+    for (i = 0; i < commenthistory.history.length; i++) {
+      historyEl.appendChild(createListElement(commenthistory.history[i]));
+    }
+  });
+}
+
+/* Fetches comments from CityServlet and display */
+function getCityRec() {
+  fetch('/city').then(response => response.json()).then((cities) => {
+    const cityListElement = document.getElementById('city-container');
+    cityListElement.innerHTML = '';
+    var i;
+    for (i = 0; i < cities.length; i++) {
+      cityListElement.appendChild(
+        createListElement(cities[i]));
+    }
+  });
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
