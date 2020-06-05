@@ -18,6 +18,8 @@ import com.google.sps.data.CommentHistory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -29,32 +31,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that maintains the comment section.*/
-@WebServlet("/comment")
-public final class DataServlet extends HttpServlet {
+@WebServlet("/delete-data")
+public final class DeleteDataServlet extends HttpServlet {
 
   private CommentHistory comments = new CommentHistory();
 
   @Override
-  /** Add comment submission to the comments object **/
+  /** Delete all comments in datastore **/
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String text = getParameter(request, "comment", "");
-    System.out.println("Getting content" + text);
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("content", text);
-
+    Query query = new Query("Comment");
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
-    response.getWriter().println("");
-  }
-
-  /** Safe wrapper for getParameter **/
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      datastore.delete(entity.getKey());
     }
-    return value;
-  }
-
-  
+    response.getWriter().println("");
+  } 
 }

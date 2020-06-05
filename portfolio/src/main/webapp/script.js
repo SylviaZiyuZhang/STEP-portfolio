@@ -27,7 +27,7 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-/* Maintains the floating navigation bar */
+/** Maintains the floating navigation bar **/
 function FloatingNavbar() {
   var navbar = document.getElementById("navbar");
   var sticky = navbar.offsetTop;
@@ -39,20 +39,39 @@ function FloatingNavbar() {
   }
 }
 
-/* Fetches comments from DataServlet and display */
+
+
+/** Fetches comments from DataServlet and display **/
 function getComments() {
-  fetch('/comment').then(response => response.json()).then((commenthistory) => {
+  const numDisplayBox = document.getElementById("num-comments");
+  const numdisplay = numDisplayBox.value;
+  console.log(numdisplay);
+  const request = '/load-comment?numdisplay=' + numdisplay;
+  fetch(request).then(response => response.json()).then((commenthistory) => {
     const historyEl = document.getElementById('history');
     historyEl.innerHTML = '';
     var i;
-    console.log("building comment element, num comment is");
-    for (i = 0; i < commenthistory.history.length; i++) {
-      historyEl.appendChild(createListElement(commenthistory.history[i]));
+    for (i = 0; i < commenthistory.length; i++) {
+      historyEl.appendChild(createListElement(commenthistory[i]));
     }
   });
 }
 
-/* Fetches comments from CityServlet and display */
+/** Posts comment onto datastore, then reload existing comments **/
+function postComment() {
+  var commentText = document.getElementById("comment-content");
+  const comment = commentText.value;
+  commentText.value = "Leave your comment here";
+  fetch('/comment', { method: "POST", body: new URLSearchParams({ comment }) }).then(response => getComments());
+}
+
+/** Deletes all comments in datastore, then clear the comment section in the page **/
+function deleteAllComments() {
+  console.log("Deleting all comments");
+  fetch('/delete-data', { method: "POST" }).then(response => getComments());
+}
+
+/** Fetches comments from CityServlet and display **/
 function getCityRec() {
   fetch('/city').then(response => response.json()).then((cities) => {
     const cityListElement = document.getElementById('city-container');
