@@ -41,13 +41,14 @@ function FloatingNavbar() {
 
 
 
-/** Fetches comments from DataServlet and display **/
+/** Fetches comments from DataServlet and display */
 function getComments() {
   const numDisplayBox = document.getElementById("num-comments");
   const numdisplay = numDisplayBox.value;
   console.log(numdisplay);
   const request = '/load-comment?numdisplay=' + numdisplay;
-  fetch(request).then(response => response.json()).then((commenthistory) => {
+  fetch(request).then(handleFetchErrors).
+  then(response => response.json()).then((commenthistory) => {
     const historyEl = document.getElementById('history');
     historyEl.innerHTML = '';
     var i;
@@ -62,26 +63,30 @@ function postComment() {
   var commentText = document.getElementById("comment-content");
   const comment = commentText.value;
   commentText.value = "Leave your comment here";
-  fetch('/comment', { method: "POST", body: new URLSearchParams({ comment }) }).then(response => getComments());
+  fetch('/comment', {
+    method: "POST",
+    body: new URLSearchParams({ comment })
+  }).then(handleFetchErrors).then(getComments());
 }
 
 /** Deletes all comments in datastore, then clear the comment section in the page **/
 function deleteAllComments() {
   console.log("Deleting all comments");
-  fetch('/delete-data', { method: "POST" }).then(response => getComments());
+  fetch('/delete-data', { method: "POST" }).then(handleFetchErrors).then(getComments());
 }
 
 /** Fetches comments from CityServlet and display **/
 function getCityRec() {
-  fetch('/city').then(response => response.json()).then((cities) => {
-    const cityListElement = document.getElementById('city-container');
-    cityListElement.innerHTML = '';
-    var i;
-    for (i = 0; i < cities.length; i++) {
-      cityListElement.appendChild(
-        createListElement(cities[i]));
-    }
-  });
+  fetch('/city').then(handleFetchErrors).then(response => response.json())
+    .then((cities) => {
+      const cityListElement = document.getElementById('city-container');
+      cityListElement.innerHTML = '';
+      var i;
+      for (i = 0; i < cities.length; i++) {
+        cityListElement.appendChild(
+          createListElement(cities[i]));
+      }
+    });
 }
 
 /** Creates an <li> element containing text. */
@@ -89,4 +94,9 @@ function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
+}
+
+function handleFetchErrors(response) {
+  if (!response.ok) throw Error(response.statusText);
+  return response;
 }
