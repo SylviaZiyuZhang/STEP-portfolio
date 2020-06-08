@@ -49,8 +49,8 @@ function getComments() {
   const request = '/load-comment?numdisplay=' + numdisplay;
   fetch(request).then(handleFetchErrors).
   then(response => response.json()).then((commenthistory) => {
-    const historyEl = document.getElementById('history');
-    historyEl.innerHTML = '';
+    const historyElem = document.getElementById('history');
+    historyElem.innerHTML = '';
     var i;
     for (i = 0; i < commenthistory.length; i++) {
       historyEl.appendChild(createListElement(commenthistory[i]));

@@ -18,7 +18,6 @@ import com.google.sps.data.CommentHistory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,6 @@ public final class DataServlet extends HttpServlet {
   /** Add comment submission to the comments object **/
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String text = getParameter(request, "comment", "");
-    System.out.println("Getting content" + text);
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("content", text);
 
