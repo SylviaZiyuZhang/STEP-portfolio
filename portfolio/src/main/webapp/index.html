@@ -9,16 +9,17 @@
 
   </head>
 
-  <body onload=getComments()>
+  <body onload="getComments(); getLoginInfo()">
     <script>
-window.onscroll = function(){FloatingNavbar()};
+      window.onscroll = function(){FloatingNavbar()};
     </script>
-    <div id="navbar">
+    <div id="navbar" onload="getLoginInfo()">
       <li><a class="active" href="javascript:void(0)">About Me</a></li>
       <li><a href="education.html">Education</a></li>
       <li><a href="hobbies.html">Leisure Time</a></li>
       <li><a href="projects.html">Projects</a></li>
       <li><a href="gallery.html">Gallery</a></li>
+      <li id="login-box"></li>
     </div>
 
     <div class="flex-container">

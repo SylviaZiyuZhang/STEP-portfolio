@@ -89,6 +89,15 @@ function getCityRec() {
     });
 }
 
+function getLoginInfo() {
+  console.log("Getting login info");
+  fetch('/login').then(handleFetchErrors).then(response => response.json())
+    .then((loginInfo) => {
+      const loginElement = document.getElementById('login-box');
+      loginElement.innerText = loginInfo;
+    })
+}
+
 /** Creates an <li> element containing text. */
 function createListElement(text) {
   const liElement = document.createElement('li');
