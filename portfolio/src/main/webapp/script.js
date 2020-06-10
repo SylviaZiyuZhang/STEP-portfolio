@@ -45,17 +45,17 @@ function FloatingNavbar() {
 function getComments() {
   const numDisplayBox = document.getElementById("num-comments");
   const numdisplay = numDisplayBox.value;
-  console.log(numdisplay);
+
   const request = '/load-comment?numdisplay=' + numdisplay;
   fetch(request).then(handleFetchErrors).
-  then(response => response.json()).then((commenthistory) => {
-    const historyElem = document.getElementById('history');
-    historyElem.innerHTML = '';
-    var i;
-    for (i = 0; i < commenthistory.length; i++) {
-      historyEl.appendChild(createListElement(commenthistory[i]));
-    }
-  });
+    then(response => response.json()).then((commentList) => {
+      const historyElem = document.getElementById('history');
+      historyElem.innerHTML = '';
+      var i;
+      for (i = 0; i < commentList.length; i++) {
+        historyElem.appendChild(createListElement(commentList[i].userEmail + ":\n" + commentList[i].commentContent));
+      }
+    });
 }
 
 /** Posts comment onto datastore, then reload existing comments **/
@@ -71,7 +71,6 @@ function postComment() {
 
 /** Deletes all comments in datastore, then clear the comment section in the page **/
 function deleteAllComments() {
-  console.log("Deleting all comments");
   fetch('/delete-data', { method: "POST" }).then(handleFetchErrors).then(getComments());
 }
 
@@ -92,9 +91,23 @@ function getCityRec() {
 function getLoginInfo() {
   console.log("Getting login info");
   fetch('/login').then(handleFetchErrors).then(response => response.json())
-    .then((loginInfo) => {
+    .then(loginInfo => {
       const loginElement = document.getElementById('login-box');
-      loginElement.innerText = loginInfo;
+      loginElement.innerHTML = loginInfo.toggleLoginURL;
+      const formElement = document.getElementById('comment-form');
+      const deleteElement = document.getElementById('delete-button');
+      if (loginInfo.isLoggedIn) {
+        formElement.style.display = "block";
+      }
+      else {
+        formElement.style.display = "none";
+      }
+      if (loginInfo.isAdmin) {
+        deleteElement.style.display = "block";
+      }
+      else {
+        deleteElement.style.display = "none";
+      }
     })
 }
 
@@ -108,4 +121,9 @@ function createListElement(text) {
 function handleFetchErrors(response) {
   if (!response.ok) throw Error(response.statusText);
   return response;
+}
+
+function indexOnload() {
+  getComments();
+  getLoginInfo();
 }

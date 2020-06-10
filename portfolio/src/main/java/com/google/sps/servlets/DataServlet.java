@@ -14,9 +14,10 @@
 
 package com.google.sps.servlets;
 
-import com.google.sps.data.CommentHistory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 
 import java.util.ArrayList;
@@ -31,17 +32,22 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comment")
 public final class DataServlet extends HttpServlet {
 
-  private CommentHistory comments = new CommentHistory();
-
   @Override
   /** Add comment submission to the comments object **/
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String text = getParameter(request, "comment", "");
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("content", text);
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
+    UserService userService = UserServiceFactory.getUserService();
+    if (userService.isUserLoggedIn() == false) {
+      System.err.println("Posting comment while not logged in");
+    }
+    else {
+    	String userEmail = userService.getCurrentUser().getEmail();
+      commentEntity.setProperty("content", text);
+      commentEntity.setProperty("email", userEmail);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
+    }
     response.getWriter().println("");
   }
 

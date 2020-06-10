@@ -37,12 +37,12 @@ public final class CityServlet extends HttpServlet {
   }
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String json = convertToJson(CityRecs);
+    String json = convertToJson(cityRecs);
 
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
-  private String convertToJson(List CityRecs) {
-    return (new Gson().toJson(CityRecs));
+  private String convertToJson(List cityRecs) {
+    return (new Gson().toJson(cityRecs));
   }
 }

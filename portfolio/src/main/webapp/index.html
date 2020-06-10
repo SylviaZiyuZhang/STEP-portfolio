@@ -1,72 +1,72 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <meta charset="UTF-8">
-    <title>Sylvia's Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<title>Sylvia's Portfolio</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="script.js"></script>
 
-  </head>
+</head>
 
-  <body onload="getComments(); getLoginInfo()">
-    <script>
-      window.onscroll = function(){FloatingNavbar()};
-    </script>
-    <div id="navbar" onload="getLoginInfo()">
-      <li><a class="active" href="javascript:void(0)">About Me</a></li>
-      <li><a href="education.html">Education</a></li>
-      <li><a href="hobbies.html">Leisure Time</a></li>
-      <li><a href="projects.html">Projects</a></li>
-      <li><a href="gallery.html">Gallery</a></li>
-      <li id="login-box"></li>
-    </div>
+<body onload="indexOnload()">
+	<script>
+		window.onscroll = function(){FloatingNavbar()};
+	</script>
+	<div id="navbar">
+		<li><a class="active" href="javascript:void(0)">About Me</a></li>
+		<li><a href="education.html">Education</a></li>
+		<li><a href="hobbies.html">Leisure Time</a></li>
+		<li><a href="projects.html">Projects</a></li>
+		<li><a href="gallery.html">Gallery</a></li>
+		<li id="login-box"></li>
+	</div>
 
-    <div class="flex-container">
-      <div class="flex-hoveritem">
-        <button onclick="addRandomGreeting()"><img src="images/profile_pic.jpg" alt="Image" height="500" width="500"/></button>
-        <div class="flex-hovertext-right">
-          <div class="textbox">What's a random fact about me?</div>
-        </div>
-      </div>
-      <div class="flex-text" id="greeting-container" style="align-self: center; font-family:courier,arial,helvetica;">
-      </div>
-    </div>
+	<div class="flex-container">
+		<div class="flex-hoveritem">
+			<button onclick="addRandomGreeting()"><img src="images/profile_pic.jpg" alt="Image" height="500" width="500"/></button>
+			<div class="flex-hovertext-right">
+				<div class="textbox">What's a random fact about me?</div>
+			</div>
+		</div>
+		<div class="flex-text" id="greeting-container" style="align-self: center; font-family:courier,arial,helvetica;">
+		</div>
+	</div>
 
-    <section>
-      <article>
-        <h1> About Me</h1>
-        <p> I'm Sylvia Zhang(张梓愉). Originally from Northeastern China, I'm now a rising
-        junior studying computer science at Carnegie Mellon University.
-        </p>
+	<section>
+		<article>
+			<h1> About Me</h1>
+			<p> I'm Sylvia Zhang(张梓愉). Originally from Northeastern China, I'm now a rising
+				junior studying computer science at Carnegie Mellon University.
+			</p>
 
-        <h1> My Favorite Trips</h1>
-        <button onclick="getCityRec()">What's my favorite trip destinations?</button>
-        <div id="city-container"></div>
-      </article>
-    </section>
-    <section>
-      <article>
-        <h2> Comment Section</h2>
-        <form onsubmit="postComment(); return false">
-          <textarea id="comment-content">Leave your comment here</textarea>
-          <br/><br/>
-          <p>Enter the desired number of comments to display:</p>
-          <input type="number" id="num-comments" min="0" max="100" value="10" onchange=getComments()>
-          <br/>
-          <input type="submit" />
+			<h1> My Favorite Trips</h1>
+			<button onclick="getCityRec()">What's my favorite trip destinations?</button>
+			<div id="city-container"></div>
+		</article>
+	</section>
+	<section>
+		<article>
+			<h2> Comment Section</h2>
+			<form id="comment-form" onsubmit="postComment(); return false">
+				<textarea id="comment-content">Leave your comment here</textarea>
+				<br/><br/>
+				<p>Enter the desired number of comments to display:</p>
+				<input type="number" id="num-comments" min="0" max="100" value="10" onchange=getComments()>
+				<br/>
+				<input type="submit" />
         </form>
 
-        <h1> User Comments </h1>
-        <button onclick="deleteAllComments()">Delete All Comments</button>
-        <ul id="history"></ul>
-      </article>
-    </section>
-    <footer>
-      <p><a href="https://www.facebook.com/ziyu.zhang.1297">My Facebook Profile</a></p>
-      <p><a href="https://github.com/SylviaZiyuZhang">My Github Profile</a></p>
-    </footer>
+				<h1> User Comments </h1>
+				<button id = "delete-button" onclick="deleteAllComments()">Delete All Comments</button>
+				<ul id="history"></ul>
+		</article>
+	</section>
+	<footer>
+		<p><a href="https://www.facebook.com/ziyu.zhang.1297">My Facebook Profile</a></p>
+		<p><a href="https://github.com/SylviaZiyuZhang">My Github Profile</a></p>
+	</footer>
 
-  </body>
+</body>
 
 </html>

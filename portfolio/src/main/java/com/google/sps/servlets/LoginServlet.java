@@ -2,6 +2,8 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.data.LoginInfo;
+import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,21 +13,30 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
+	private LoginInfo loginInfo = new LoginInfo();
+
   @Override
-  public void doGet(HttpServletREquest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html");
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    response.setContentType("application/json");
+    
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
       String userEmail = userService.getCurrentUser().getEmail();
       String redirUrlAfterLogout = "/";
       String logoutUrl = userService.createLogoutURL(redirUrlAfterLogout);
-
-      response.getWriter().println("<a href=\"" + logoutUrl + "\">Logout from" + userEmail + "</a>");
+      loginInfo.toggleLoginURL = "<a href=\"" + logoutUrl + "\">Logout from" +
+        userEmail + "</a>";
+      loginInfo.isLoggedIn = true;
+      loginInfo.isAdmin = userService.isUserAdmin();
+      response.getWriter().println(new Gson().toJson(loginInfo));
     }
     else {
       String redirUrlAfterLogin = "/";
-      String loginUrl = userService.createLogoutURL(redirUrlAfterLogin);
-      response.getWriter().println("<a href=\"" + loginUrl + "\"> Log In</a>");
+      String loginUrl = userService.createLoginURL(redirUrlAfterLogin);
+      loginInfo.toggleLoginURL = "<a href=\"" + loginUrl + "\"> Log In</a>";
+      loginInfo.isLoggedIn = false;
+      loginInfo.isAdmin = false;
+      response.getWriter().println(new Gson().toJson(loginInfo));
     }
   }
 }
