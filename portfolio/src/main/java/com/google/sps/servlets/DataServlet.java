@@ -19,6 +19,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.sps.data.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,8 @@ public final class DataServlet extends HttpServlet {
   @Override
   /** Add comment submission to the comments object **/
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String text = getParameter(request, "comment", "");
-    Entity commentEntity = new Entity("Comment");
+    String text = getParameter(request, Constants.commentParam, "");
+    Entity commentEntity = new Entity(Constants.commentEntityKind);
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn() == false) {
       System.err.println("Posting comment while not logged in");
