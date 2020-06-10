@@ -22,6 +22,8 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import com.google.sps.data.CommentInfo;
+import com.google.sps.data.Constants;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class LoadCommentServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment");
+    Query query = new Query(Constants.commentEntityKind);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -51,13 +53,13 @@ public class LoadCommentServlet extends HttpServlet {
       commentList.add(commentInfo);
     }
     
-    response.setContentType("application/json;");
+    response.setContentType(Constants.jsonContentType);
     response.getWriter().println(new Gson().toJson(commentList));
   }
 
   /** Safe wrapper for extracting the requested number of comments to display **/
   private int getNumDisplay(HttpServletRequest request) {
-    String numString = request.getParameter("numdisplay");
+    String numString = request.getParameter(Constants.numdisplayParam);
     int num;
     try {
       num = Integer.parseInt(numString);
