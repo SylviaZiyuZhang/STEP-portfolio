@@ -14,9 +14,6 @@
 
 package com.google.sps.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /** Class containing user information alongside their comment **/
 public class CommentInfo {
