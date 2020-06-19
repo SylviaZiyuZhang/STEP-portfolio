@@ -56,6 +56,7 @@ public final class FindMeetingQueryTest {
     query = new FindMeetingQuery();
   }
 
+  
   @Test
   public void optionsForNoAttendees() {
     MeetingRequest request = new MeetingRequest(NO_ATTENDEES, DURATION_1_HOUR);
@@ -270,5 +271,6 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
+
 }
 
