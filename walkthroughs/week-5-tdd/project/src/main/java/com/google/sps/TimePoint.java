@@ -23,10 +23,12 @@ import java.util.Comparator;
 public final class TimePoint {
   public final int time;
   public final boolean start;
+  public final boolean mandatory;
 
-  public TimePoint(int time, boolean start) {
+  public TimePoint(int time, boolean start, boolean mandatory) {
   this.time = time;
   this.start = start;
+  this.mandatory = mandatory;
   }
 
   /** Order by first ascending order of the time then priority of ending timepoints **/
