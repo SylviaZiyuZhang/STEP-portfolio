@@ -18,9 +18,10 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
-import com.google.sps.data.CommentHistory;
+import com.google.sps.data.CommentInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,20 +41,18 @@ public class LoadCommentServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    List<String> commentList = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      String content = (String) entity.getProperty("content");
-      commentList.add(content);
-    }
-    /** Take the first numDisplay/numComments comments to write into response **/
+    List<CommentInfo> commentList = new ArrayList<>();
     int numDisplay = getNumDisplay(request);
-    int toIndex = Math.min(numDisplay, commentList.size());
-    List<String> commentDisplayList = commentList.subList(0, toIndex);
-    Gson gson = new Gson();
-
+    for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(numDisplay))) {
+      long id = entity.getKey().getId();
+      CommentInfo commentInfo = new CommentInfo();
+      commentInfo.commentContent = (String) entity.getProperty("content");
+    	commentInfo.userEmail = (String) entity.getProperty("email"); 
+      commentList.add(commentInfo);
+    }
+    
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(commentDisplayList));
+    response.getWriter().println(new Gson().toJson(commentList));
   }
 
   /** Safe wrapper for extracting the requested number of comments to display **/

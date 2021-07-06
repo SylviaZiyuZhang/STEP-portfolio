@@ -18,13 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** Class representing the comment section **/
-public class CommentHistory {
-  private List<String> history = new ArrayList<>();
-  private int commentCount = 0;
-
-  public void addComment (String newComment) {
-    history.add(newComment);
-    commentCount += 1;
-  }
+/** Class containing user information alongside their comment **/
+public class CommentInfo {
+  public String commentContent;
+  public String userEmail;
 }

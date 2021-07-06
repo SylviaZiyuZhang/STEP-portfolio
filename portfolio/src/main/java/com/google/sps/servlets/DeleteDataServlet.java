@@ -14,7 +14,6 @@
 
 package com.google.sps.servlets;
 
-import com.google.sps.data.CommentHistory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -33,8 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that maintains the comment section.*/
 @WebServlet("/delete-data")
 public final class DeleteDataServlet extends HttpServlet {
-
-  private CommentHistory comments = new CommentHistory();
 
   @Override
   /** Delete all comments in datastore **/

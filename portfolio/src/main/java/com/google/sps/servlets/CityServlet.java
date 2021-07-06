@@ -27,24 +27,22 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/city")
 public final class CityServlet extends HttpServlet {
 
-  private List<String> CityRecs;
+  private List<String> cityRecs;
   @Override
   public void init() {
-    CityRecs = new ArrayList<>();
-    CityRecs.add("Kyoto, Japan");
-    CityRecs.add("Vladivostok, Russia");
-    CityRecs.add("Sofia, Bulgaria");
+    cityRecs = new ArrayList<>();
+    cityRecs.add("Kyoto, Japan");
+    cityRecs.add("Vladivostok, Russia");
+    cityRecs.add("Sofia, Bulgaria");
   }
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String json = convertToJson(CityRecs);
+    String json = convertToJson(cityRecs);
 
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
-  private String convertToJson(List CityRecs) {
-    Gson gson = new Gson();
-    String json = gson.toJson(CityRecs);
-    return json;
+  private String convertToJson(List cityRecs) {
+    return (new Gson().toJson(cityRecs));
   }
 }
