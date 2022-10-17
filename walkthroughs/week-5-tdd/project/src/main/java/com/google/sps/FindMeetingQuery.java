@@ -24,46 +24,73 @@ public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     ArrayList<TimePoint> timePoints = constructTimePoints(events, request);
     ArrayList<TimeRange> meetingTimes = new ArrayList<TimeRange>();
+    ArrayList<TimeRange> meetingTimesOptional = new ArrayList<TimeRange>();
     int lastValidStartTime = 0;
+    int lastValidStartTimeOptional = 0;
     int intervalCount = 0;
+    int intervalCountOptional = 0;
     for (TimePoint timePoint : timePoints) {
+      /* Theoretically the sweepline operations can be functions to avoid code repetition,
+       * but Java doesn't natively support passing integers by reference, constructing another
+       * class for the loop structure hurts more than repeating code */
       int time = timePoint.time;
-      if (intervalCount == 0 && timePoint.start
-        && timePoint.time - lastValidStartTime >= request.getDuration()) {
+      // Maintain availabilities for mandatory attendees
+      if (timePoint.mandatory) {
+        if (intervalCount == 0 && timePoint.start
+          && timePoint.time - lastValidStartTime >= request.getDuration()) {
+          boolean endOfDay = (timePoint.time == TimeRange.END_OF_DAY);
+          meetingTimes.add(TimeRange.fromStartEnd(lastValidStartTime, timePoint.time, endOfDay));
+        }
+        if (timePoint.start)
+          intervalCount ++;
+        else
+          intervalCount --;
+        if (!timePoint.start && intervalCount == 0) {
+          lastValidStartTime = timePoint.time;
+        }
+      }
+      // Maintain availabilities for optional attendees
+      if (intervalCountOptional == 0 && timePoint.start
+          && timePoint.time - lastValidStartTimeOptional >= request.getDuration()) {
         boolean endOfDay = (timePoint.time == TimeRange.END_OF_DAY);
-        meetingTimes.add(TimeRange.fromStartEnd(lastValidStartTime, timePoint.time, endOfDay));
+        meetingTimesOptional.add(TimeRange.fromStartEnd(lastValidStartTimeOptional, timePoint.time, endOfDay));
       }
       if (timePoint.start)
-        intervalCount ++;
+        intervalCountOptional ++;
       else
-        intervalCount --;
-      if (!timePoint.start && intervalCount == 0) {
-        lastValidStartTime = timePoint.time;
+        intervalCountOptional --;
+      if (!timePoint.start && intervalCountOptional == 0) {
+        lastValidStartTimeOptional = timePoint.time;
       }
     }
-    return meetingTimes;
+    return meetingTimesOptional.isEmpty() ? meetingTimes : meetingTimesOptional;
   }
   
   private ArrayList<TimePoint> constructTimePoints(Collection<Event> events, MeetingRequest request) {
     ArrayList<TimePoint> timePoints = new ArrayList<TimePoint>();
     for (Event event : events) {
       boolean counted = false;
+      boolean optionalCounted = false;
       Set<String> attendees = event.getAttendees();
       for (String attendee : attendees) {
+        if (request.getOptionalAttendees().contains(attendee))
+        optionalCounted = true;
         if (request.getAttendees().contains(attendee)) {
           counted = true;
           break;
         }
       }
       if (counted) {
-        TimePoint timePointStart = new TimePoint(event.getWhen().start(), true);
-        TimePoint timePointEnd = new TimePoint(event.getWhen().end(), false);
-        timePoints.add(timePointStart);
-        timePoints.add(timePointEnd);
+        timePoints.add(new TimePoint(event.getWhen().start(), true, true));
+        timePoints.add(new TimePoint(event.getWhen().end(), false, true));
+      }
+      if ((!counted) && optionalCounted) {
+        timePoints.add(new TimePoint(event.getWhen().start(), true, false));
+        timePoints.add(new TimePoint(event.getWhen().end(), false, false));
       }
     }
     Collections.sort(timePoints, TimePoint.ORDER_BY_TIME);
-    timePoints.add(new TimePoint(TimeRange.END_OF_DAY, true));
+    timePoints.add(new TimePoint(TimeRange.END_OF_DAY, true, true));
     return timePoints;
   }
 
