@@ -9,7 +9,7 @@
 
 </head>
 
-<body onload=getComments()>
+<body onload="indexOnload()">
 	<script>
 		window.onscroll = function(){FloatingNavbar()};
 	</script>
@@ -19,6 +19,7 @@
 		<li><a href="hobbies.html">Leisure Time</a></li>
 		<li><a href="projects.html">Projects</a></li>
 		<li><a href="gallery.html">Gallery</a></li>
+		<li id="login-box"></li>
 	</div>
 
 	<div class="flex-container">
@@ -47,17 +48,17 @@
 	<section>
 		<article>
 			<h2> Comment Section</h2>
-			<form onsubmit="postComment(); return false">
+			<form id="comment-form" onsubmit="postComment(); return false">
 				<textarea id="comment-content">Leave your comment here</textarea>
 				<br/><br/>
 				<p>Enter the desired number of comments to display:</p>
 				<input type="number" id="num-comments" min="0" max="100" value="10" onchange=getComments()>
 				<br/>
 				<input type="submit" />
-      </form>
+        </form>
 
 				<h1> User Comments </h1>
-				<button onclick="deleteAllComments()">Delete All Comments</button>
+				<button id = "delete-button" onclick="deleteAllComments()">Delete All Comments</button>
 				<ul id="history"></ul>
 		</article>
 	</section>
